@@ -1,0 +1,5 @@
+-Add weight, height, age, gender to the User class in the models.py file
+
+-Import these variables where needed in the workout automation.py file and the views.py file
+
+-Make these variables correspond in the html files to get the variables input from the user 

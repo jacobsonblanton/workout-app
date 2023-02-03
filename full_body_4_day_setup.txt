@@ -1,0 +1,42 @@
+getting the upper/lower split:
+
+- create a list for every exercise (horizontal push, pull, vertical push, pull, quad, ham, compounds) 
+- create a for loop to get each exercise
+- append to the new in each loop
+- repeat this process for each training day of the week (if 6 days, 3 upper and 3 lower, means there should a 3 loops for upper and 3 loops for lower)
+
+Setting up the full body 4 day split:
+
+Rest days should be between the hardest days 
+
+Day 1 - Rest - Day 2 - Rest - Day 3 - Day 4 - Rest
+
+Day 1: Push --> 2 quad (compound), 1 hor push, 1 chest iso, 1 vertical press, 1 tri, 1 side delt, 1 calf
+-Quad 
+-Chest
+-Front Delts 
+-Tri
+-Calf
+-Side Delts
+
+Day 2: Pull --> 1 Ham (compound) , 1 vert pull, 1 hor pull, 2 bi, 1 side delt  
+-Ham
+-Back
+-Side Delts
+-Rear Delts
+-Bis
+
+Day 1: Push --> 2 quad (compound and iso), 1 vert press, 1 tri, 1 hor push, 1 side delt, 1 calf
+-Quad
+-Chest
+-Front Delts
+-Tri
+-Calf
+-Side Delts
+
+Day 2: Pull --> 2 Ham (compound and iso), 1 vert pull, 1 hor pull, 2 bi, 1 side delt 
+-Ham
+-Back
+-Side Delts
+-Rear Delts
+-Bis

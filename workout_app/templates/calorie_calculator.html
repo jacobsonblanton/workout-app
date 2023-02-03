@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{url_for('static', filename='styles.css')}}" rel="stylesheet">
+    <script src="{{url_for('static', filename='script.js')}}" defer></script>
+    <title>{% block title %}Workout App | Calorie Calculator{% endblock %}</title>
+</head>
+<body>
+    <div class="navbar navbar-expand-lg navbar-light bg-dark">
+        <a class="navbar-brand" href="/">Workout App</a>
+    </div>
+    <div class="container-fluid">
+        <form method="POST">{% block form %}
+            <div class="form-group">
+                <label for="JobTypeInput">Job Type</label>
+                <select type="text" name="jobType-content" id="jobType-content" class="form-control" placeholder="select your job type">
+                    <option value="sedentary">Sedentary</option>
+                    <option value="sedentary-active">Sedentary-active</option>
+                    <option value="active-sedentary">Active-sedentary</option>
+                    <option value="active">Active</option>
+                </select>
+            </div>
+            <br/>
+            <br/>
+            <div class="form-group">
+                <label for="CardioInput">Cardio</label>
+                <input type="number" name="cardio-content" id="cardio-content" class="form-control" placeholder="Enter the amount of cardio per week in minutes">
+            </div>
+            <br/>
+            <br/>
+            <div class="form-group">
+                <label for="WeightTrainingInput">Weight Training</label>
+                <input type="number" name="weightTraining-content" id="weightTraining-content" class="form-control" placeholder="Enter the amount of weight training sessions per week">
+            </div>
+            <br/>
+            <br/>
+            <button class="btn btn-outline-primary" type="submit">Calculate</button>
+            
+        </form>{% endblock %}
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <!-- displaying the flashed messgaes related to logging in -->
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+            {% if messages %} 
+                {% for category, message in messages %} 
+                    {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %} 
+                {% endfor %}
+            {% endif %}
+        {% endwith %}                    
+    </div>
+    
+
+    <!-- using javascript to make the navbar responsive -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" 
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" 
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" 
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>

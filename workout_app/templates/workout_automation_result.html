@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="{{url_for('static', filename='styles.css')}}" rel="stylesheet">
+    <script src="{{url_for('static', filename='script.js')}}" defer></script>
+    <title>{% block title %}Workout App | Workout Automation Result{% endblock %}</title>
+</head>
+<body>
+    <div class="navbar navbar-epand-lg navbar-light bg-dark">
+        <a class="navbar-brand" href="/">Workout App</a>
+
+    </div>{% block div %}
+    {% if user.workout_days == '6' %}
+        {% if user.training_focus == 'hypertrophy' %}
+            <div class="container-fluid">
+                <h2> Here is your Six Day Upper/Lower Split</h2>
+                    <table class="table table-striped table-hover">
+                        <tbody>
+                            <tr>
+                                <th>Upper Day One</th>
+                                <th>Lower Day One</th>
+                                <th>Upper Day Two</th>
+                                <th>Lower Day Two</th>
+                                <th>Upper Day Three</th>
+                                <th>Lower Day Three</th>
+                            </tr>
+                            <tr>
+                                <td>{{ upper_one.exercise1 }}</td>
+                                <td>{{ lower_one.exercise1 }}</td>
+                                <td>{{ upper_two.exercise1 }}</td>
+                                <td>{{ lower_two.exercise1 }}</td>
+                                <td>{{ upper_three.exercise1 }}</td>
+                                <td>{{ lower_three.exercise1 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ upper_one.exercise2 }}</td>
+                                <td>{{ lower_one.exercise2 }}</td>
+                                <td>{{ upper_two.exercise2 }}</td>
+                                <td>{{ lower_two.exercise2 }}</td>
+                                <td>{{ upper_three.exercise2 }}</td>
+                                <td>{{ lower_three.exercise2 }}</td>
+
+                            </tr>
+                            <tr>
+                                <td>{{ upper_one.exercise3 }}</td>
+                                <td>{{ lower_one.exercise3 }}</td>
+                                <td>{{ upper_two.exercise3 }}</td>
+                                <td>{{ lower_two.exercise3 }}</td>
+                                <td>{{ upper_three.exercise3 }}</td>
+                                <td>{{ lower_three.exercise3 }}</td>
+
+                            </tr>
+                            <tr>
+                                <td>{{ upper_one.exercise4 }}</td>
+                                <td>{{ lower_one.exercise4 }}</td>
+                                <td>{{ upper_two.exercise4 }}</td>
+                                <td>{{ lower_two.exercise4 }}</td>
+                                <td>{{ upper_three.exercise4 }}</td>
+                                <td>{{ lower_three.exercise4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ upper_one.exercise5 }}</td>
+                                <td>{{ lower_one.exercise5 }}</td>
+                                <td>{{ upper_two.exercise5 }}</td>
+                                <td>{{ lower_two.exercise5 }}</td>
+                                <td>{{ upper_three.exercise5 }}</td>
+                                <td>{{ lower_three.exercise5 }}</td>
+                            </tr>
+                                
+                        </tbody>
+                    </table>
+            </div>
+            {% endif %}
+        {% endif %}
+        {% if user.workout_days == '5' %}
+        {% if user.training_focus == 'hypertrophy' %}
+            <div class="container-fluid">
+                <h2> Here is your Five Day Upper/Lower, Push, Pull, Legs Split</h2>
+                    <table class="table table-striped table-hover">
+                        <tbody>
+                            <tr>
+                                <th>Lower Day</th>
+                                <th>Upper Day</th>
+                                <th>Legs Day</th>
+                                <th>Push Day</th>
+                                <th>Pull Day</th>
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise1 }}</td>
+                                <td>{{ ul_ppl_two.exercise1 }}</td>
+                                <td>{{ ul_ppl_three.exercise1 }}</td>
+                                <td>{{ ul_ppl_four.exercise1 }}</td>
+                                <td>{{ ul_ppl_five.exercise1 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise2 }}</td>
+                                <td>{{ ul_ppl_two.exercise2 }}</td>
+                                <td>{{ ul_ppl_three.exercise2 }}</td>
+                                <td>{{ ul_ppl_four.exercise2 }}</td>
+                                <td>{{ ul_ppl_five.exercise2 }}</td>
+
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise3 }}</td>
+                                <td>{{ ul_ppl_two.exercise3 }}</td>
+                                <td>{{ ul_ppl_three.exercise3 }}</td>
+                                <td>{{ ul_ppl_four.exercise3 }}</td>
+                                <td>{{ ul_ppl_five.exercise3 }}</td>
+
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise4 }}</td>
+                                <td>{{ ul_ppl_two.exercise4 }}</td>
+                                <td>{{ ul_ppl_three.exercise4 }}</td>
+                                <td>{{ ul_ppl_four.exercise4 }}</td>
+                                <td>{{ ul_ppl_five.exercise4 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise5 }}</td>
+                                <td>{{ ul_ppl_two.exercise5 }}</td>
+                                <td>{{ ul_ppl_three.exercise5 }}</td>
+                                <td>{{ ul_ppl_four.exercise5 }}</td>
+                                <td>{{ ul_ppl_five.exercise5 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise6 }}</td>
+                                <td>{{ ul_ppl_two.exercise6 }}</td>
+                                <td>{{ ul_ppl_three.exercise6 }}</td>
+                                <td>{{ ul_ppl_four.exercise6 }}</td>
+                                <td>{{ ul_ppl_five.exercise6 }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ ul_ppl_one.exercise7 }}</td>
+                                <td>{{ ul_ppl_two.exercise7 }}</td>
+                                <td>{{ ul_ppl_three.exercise7 }}</td>
+                                <td>{{ ul_ppl_four.exercise7 }}</td>
+                                <td>{{ ul_ppl_five.exercise7 }}</td>
+                            </tr>
+                                
+                        </tbody>
+                    </table>
+            </div>
+            {% endif %}
+        {% endif %}
+        {% if user.workout_days == '4' %}
+            {% if user.training_focus == 'hypertrophy' %}
+                <div class="container-fluid">
+                    <h2> Here is your Four Day Full Body Split</h2>
+                        <table class="table table-striped table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>Full Body Day One</th>
+                                    <th>Full Body Day Two</th>
+                                    <th>Full Body Day Three</th>
+                                    <th>Full Body Day Four</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise1 }}</td>
+                                    <td>{{ full_body4_two.exercise1 }}</td>
+                                    <td>{{ full_body4_three.exercise1 }}</td>
+                                    <td>{{ full_body4_four.exercise1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise2 }}</td>
+                                    <td>{{ full_body4_two.exercise2 }}</td>
+                                    <td>{{ full_body4_three.exercise2 }}</td>
+                                    <td>{{ full_body4_four.exercise2 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise3 }}</td>
+                                    <td>{{ full_body4_two.exercise3 }}</td>
+                                    <td>{{ full_body4_three.exercise3 }}</td>
+                                    <td>{{ full_body4_four.exercise3 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise4 }}</td>
+                                    <td>{{ full_body4_two.exercise4 }}</td>
+                                    <td>{{ full_body4_three.exercise4 }}</td>
+                                    <td>{{ full_body4_four.exercise4 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise5 }}</td>
+                                    <td>{{ full_body4_two.exercise5 }}</td>
+                                    <td>{{ full_body4_three.exercise5 }}</td>
+                                    <td>{{ full_body4_four.exercise5 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise6 }}</td>
+                                    <td>{{ full_body4_two.exercise6 }}</td>
+                                    <td>{{ full_body4_three.exercise6 }}</td>
+                                    <td>{{ full_body4_four.exercise6 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise7 }}</td>
+                                    <td>{{ full_body4_two.exercise7 }}</td>
+                                    <td>{{ full_body4_three.exercise7 }}</td>
+                                    <td>{{ full_body4_four.exercise7 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body4_one.exercise8 }}</td>
+                                    <td>{{ full_body4_two.exercise8 }}</td>
+                                    <td>{{ full_body4_three.exercise8 }}</td>
+                                    <td>{{ full_body4_four.exercise8 }}</td>
+                                </tr>
+                                    
+                            </tbody>
+                        </table>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if user.workout_days == '3' %}
+            {% if user.training_focus == 'hypertrophy' %}
+                <div class="container-fluid">
+                    <h2> Here is your Three Day Full Body Split</h2>
+                        <table class="table table-striped table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>Full Body Day One</th>
+                                    <th>Full Body Day Two</th>
+                                    <th>Full Body Day Three</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise1 }}</td>
+                                    <td>{{ full_body_two.exercise1 }}</td>
+                                    <td>{{ full_body_three.exercise1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise2 }}</td>
+                                    <td>{{ full_body_two.exercise2 }}</td>
+                                    <td>{{ full_body_three.exercise2 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise3 }}</td>
+                                    <td>{{ full_body_two.exercise3 }}</td>
+                                    <td>{{ full_body_three.exercise3 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise4 }}</td>
+                                    <td>{{ full_body_two.exercise4 }}</td>
+                                    <td>{{ full_body_three.exercise4 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise5 }}</td>
+                                    <td>{{ full_body_two.exercise5 }}</td>
+                                    <td>{{ full_body_three.exercise5 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise6 }}</td>
+                                    <td>{{ full_body_two.exercise6 }}</td>
+                                    <td>{{ full_body_three.exercise6 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise7 }}</td>
+                                    <td>{{ full_body_two.exercise7 }}</td>
+                                    <td>{{ full_body_three.exercise7 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ full_body_one.exercise8 }}</td>
+                                    <td>{{ full_body_two.exercise8 }}</td>
+                                    <td>{{ full_body_three.exercise8 }}</td>
+                                </tr>
+                                    
+                            </tbody>
+                        </table>
+                </div> 
+            {% endif %}
+        {% endif %}
+        <!-- Add the 2 day Upper/Lower Split here -->
+        {% if user.workout_days == '2' %}
+            {% if user.training_focus == 'hypertrophy' %}
+                <div class="container-fluid">
+                    <h2> Here is your Three Day Full Body Split</h2>
+                        <table class="table table-striped table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>Upper Day One</th>
+                                    <th>Lower Day Two</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise1 }}</td>
+                                    <td>{{ ul_lower.exercise1 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise2 }}</td>
+                                    <td>{{ ul_lower.exercise2 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise3 }}</td>
+                                    <td>{{ ul_lower.exercise3 }}</td>
+
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise4 }}</td>
+                                    <td>{{ ul_lower.exercise4 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise5 }}</td>
+                                    <td>{{ ul_lower.exercise5 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise6 }}</td>
+                                    <td>{{ ul_lower.exercise6 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise7 }}</td>
+                                    <td>{{ ul_lower.exercise7 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>{{ ul_upper.exercise8 }}</td>
+                                    <td>{{ ul_lower.exercise8 }}</td>
+                                </tr>
+                                    
+                            </tbody>
+                        </table>
+                </div> 
+            {% endif %}
+        {% endif %}
+        {% endblock %}
+        <form method="GET" action="/workout-automation">
+            <br><br><br>
+            <button class="btn btn-outline-primary" type="submit">Re-Calculate</button>
+        </form>
+        <br/><br/><br/><br/><br/><br/>        
+        <!-- displaying the flashed messgaes related to logging in -->
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+            {% if messages %} 
+                {% for category, message in messages %} 
+                    {% if category == 'error' %}
+                    <div class="alert alert-danger alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success alter-dismissable fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    {% endif %} 
+                {% endfor %}
+            {% endif %}
+        {% endwith %}                    
+    </div>
+    
+

@@ -1,0 +1,34 @@
+{% extends "calorie_calculator.html" %}
+{% block title %} Workout App | Workout Automator {% endblock %}
+{% block form %} 
+    <label for="workout-days">How many days a week would you like to workout?</label>
+    <select type="number" name="workout-days-content" id="workout-days-content" class="form-control">
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+    </select>
+    <br>
+    <br>
+    <br>
+    <label for="training-focus">What is your training focus?</label>
+    <select type="text" name="training-focus-content" id="training-focus-content" class="form-control">
+        <option value="strength">strength</option>
+        <option value="hypertrophy">hypertrophy</option>
+    </select>
+    <br>
+    <br>
+    <br>
+    <label for="session-time">How much time can you spend per session? (minutes)</label>
+    <select type="number" name="session-time-content" id="session-time-content" class="form-control">
+        <option value="30">30</option>
+        <option value="60">60</option>
+        <option value="90">90</option>
+        <option value="120">120</option>
+    </select>
+    <br>
+    <br>
+    <br>
+    <button class="btn btn-outline-primary" type="submit">Generate</button>
+{% endblock %}

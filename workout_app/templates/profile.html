@@ -1,0 +1,41 @@
+<!-- This page will display all the information about the user, basically display all the contents from the database tables.
+     This page will diaply info such as, calories, all the workouts the user has saved in the database, height, weight, training focus, how many days per week they train, etc.
+-->
+{% extends "home.html" %}
+{% block title %} Workout App | {{user.first_name}} {% endblock %}
+{% block div %}
+<br/><br/><br/>
+<table class="table table-striped table-hover">
+     <tbody>
+          <tr>
+               <tr>
+                    <th>First Name</th><td>{{ user.first_name }}</td>
+               </tr>
+               <tr>
+                    <th>Last Name</th><td>{{ user.last_name }}</td>
+               </tr>
+               <tr>
+                    <th>Weight</th><td>{{ user.starting_weight }}</td>
+               </tr>
+               <tr>
+                    <th>Height</th><td>{{ user.height }}</td>
+               </tr>
+               <tr>
+                    <th>Age</th><td>{{ user.age }}</td>
+               </tr>
+               <tr>
+                    <th>Gender</th><td>{{ user.gender }}</td>
+               </tr>
+               <tr>
+                    <th>Daily Calories</th><td>{{ user.cals }}</td>
+               </tr>
+               <tr>
+                    <th>Job Type</th><td>{{ user.job_type }}</td>
+               </tr>
+          </tr>
+
+     </tbody>
+</table>
+
+{% endblock %}
+{% block form %}{% endblock %}
