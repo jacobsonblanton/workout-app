@@ -93,8 +93,8 @@ def home():
             update_weight = delete(Weight).where(Weight.date_created == today)
             db.session.execute(update_weight)
             db.session.commit()
-    user = User.query.first()
-    #print(user.coach.first_name)
+    coach = Coach.query.first()
+    print(coach.user.first_name)
     
 
     if request.method == 'POST':

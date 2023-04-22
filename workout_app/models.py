@@ -34,16 +34,20 @@ class User(db.Model, UserMixin):
 
 class Client(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 class Coach(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     client_id = db.Column(db.Integer, db.ForeignKey('client.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    client = db.relationship('Client', backref='client_coach')
+    # establishing the relationship between the user and coach tables
+    # this allows us to access the user attributes from the coach table
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='user', foreign_keys=[user_id])
     
 class Weight(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    new_weight = db.Column(db.Float, nullable=True)
+    new_weight = db.Column(db.Float,)
     date_created = db.Column(db.Date, default=datetime.now())
         

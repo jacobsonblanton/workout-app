@@ -1,12 +1,11 @@
 # importing the necessary modules 
-import re
 from flask import Flask, render_template, redirect, url_for, request, flash, Blueprint
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import UserMixin, login_manager, login_user, login_required, logout_user, current_user, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User
+from .models import User, Coach, Client
 
 auth = Blueprint('auth', __name__)
 
@@ -50,6 +49,7 @@ def sign_up():
         height = request.form.get('height-content')
         age = request.form.get('age-content')
         gender = request.form.get('gender-content')
+        user_type = request.form.get('type-content')
         # filtering the database by email and checking if the email entered matches another in the database.
         # Then adding the user's info if the email is not already in the database
         user = User.query.filter_by(email=email).first()
@@ -71,8 +71,19 @@ def sign_up():
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)
+            if user_type.lower() == 'coach':
+                new_coach = Coach()
+                db.session.add(new_coach)
+                db.session.commit()
+            if user_type.lower() == 'client':
+                new_client = Client()
+                db.session.add(new_client)
+                db.session.commit()
             flash('Account created!', category='success')
             return redirect(url_for('views.home'))
+    
+        
+
     # rendering the sign up page if the request is a 'POST' request with the current user that is logged in
     else:
         return render_template("sign_up.html", user=current_user)
