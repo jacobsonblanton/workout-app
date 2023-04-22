@@ -5,9 +5,7 @@ from datetime import datetime
 from flask_login import UserMixin, login_manager, login_user, login_required, logout_user, current_user, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User, Upper_One, Lower_One, Upper_Two, Upper_Three, Lower_Two, Lower_Three, Full_Body_One, Full_Body_Two, Full_Body_Three 
-from .models import Full_Body_One_4day, Full_Body_Two_4day, Full_Body_Three_4day, Full_Body_Four_4day
-from .models import UL_PPL_One, UL_PPL_Two, UL_PPL_Three, UL_PPL_Four, UL_PPL_Five, Weight, Upper_2day, Lower_2day
+from .models import User, Coach, Client, Weight
 from sqlalchemy import delete, update, text
 from datetime import date, timedelta
 from sqlalchemy.sql import func
@@ -28,7 +26,7 @@ for d in everyday_of_current_year(2023):
     table.append(d.strftime("%m-%d"))
 #print(table)
 
-# removing the zeros and empty strings from the list of weights that is pull from the weight table 
+# removing the zeros and empty strings from the list of weights that is pulled from the weight table 
 def removing_zeroes(x):
     
     for i in x:
@@ -95,15 +93,8 @@ def home():
             update_weight = delete(Weight).where(Weight.date_created == today)
             db.session.execute(update_weight)
             db.session.commit()
-    #new_weight = Weight(user_id=current_user.id, new_weight=current_user.starting_weight)
-    #db.session.add(new_weight)
-    #db.session.commit()
-    #print(current_user.starting_weight)
-
-    now = datetime.now()
-    today = now.date()
-    today = str(today)
-    #print(today)
+    user = User.query.first()
+    #print(user.coach.first_name)
     
 
     if request.method == 'POST':
@@ -488,7 +479,7 @@ def workout_automation():
                         # checking if the exercise exists in the 2 previous upper days 
                         # if the exercise exists, remove the exercise from current list and re-run the loop
                         for elem in upper_three:
-                            if elem in upper_one or elem in upper_day_two():
+                            if elem in upper_one and elem in upper_day_two():
                                 upper_three.remove(elem)
                                 return upper_day_three()
 
@@ -535,7 +526,7 @@ def workout_automation():
                         # checking if the exercise exists in the previous lower day 
                         # if the exercise exists, remove the exercise from current list and re-run the loop
                         for elem in lower_three:
-                            if elem in lower_one or elem in lower_day_two():
+                            if elem in lower_one and elem in lower_day_two():
                                 lower_three.remove(elem)
                                 return lower_day_three()
 
@@ -693,7 +684,7 @@ def workout_automation():
                         ul_ppl_three.append(random.choice(shoulder_exercises))
                         
                         for elem in ul_ppl_three:
-                            if elem in UL_PPL_day_one() or elem in UL_PPL_day_two():
+                            if elem in UL_PPL_day_one() and elem in UL_PPL_day_two():
                                 ul_ppl_three.remove(elem)
                                 return UL_PPL_day_three()
 
@@ -750,7 +741,7 @@ def workout_automation():
                         ul_ppl_four.append(random.choice(chest_iso_exercises))
 
                         for elem in ul_ppl_four:
-                            if elem in UL_PPL_day_one() or elem in UL_PPL_day_two():
+                            if elem in UL_PPL_day_one() and elem in UL_PPL_day_two():
                                     ul_ppl_four.remove(elem)
                                     return UL_PPL_day_four()
 
@@ -806,7 +797,7 @@ def workout_automation():
                         ul_ppl_five.append(random.choice(tri_exercises))
 
                         for elem in ul_ppl_five:
-                            if elem in UL_PPL_day_two() or elem in UL_PPL_day_three():
+                            if elem in UL_PPL_day_two() and elem in UL_PPL_day_three():
                                 ul_ppl_five.remove(elem)
                                 return UL_PPL_day_five()
 
@@ -958,7 +949,7 @@ def workout_automation():
                         full_body_three.append(random.choice(shoulder_exercises))
 
                         for elem in full_body_three:
-                            if elem in full_body_day_one() or elem in full_body_day_two():
+                            if elem in full_body_day_one() and elem in full_body_day_two():
                                 full_body_three.remove(elem)
                                 return full_body_day_three()
 
@@ -1008,7 +999,7 @@ def workout_automation():
                         full_body_four.append(random.choice(shoulder_exercises))
 
                         for elem in full_body_four:
-                            if elem in full_body_day_one() or elem in full_body_day_two() or elem in full_body_day_three():
+                            if elem in full_body_day_one() and elem in full_body_day_two() and elem in full_body_day_three():
                                 full_body_four.remove(elem)
                                 return full_body_day_four()
 
@@ -1172,7 +1163,7 @@ def workout_automation():
                         full_body_three.append(random.choice(shoulder_exercises))
 
                         for elem in full_body_three:
-                            if elem in full_body_day_one() or elem in full_body_day_two():
+                            if elem in full_body_day_one() and elem in full_body_day_two():
                                 full_body_three.remove(elem)
                                 return full_body_day_three()
 
