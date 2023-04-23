@@ -95,6 +95,8 @@ def home():
             db.session.commit()
     coach = Coach.query.first()
     print(coach.user.first_name)
+    client = Client.query.first()
+    print(client.user.first_name)
     
 
     if request.method == 'POST':
@@ -148,19 +150,10 @@ def calorie_calculator():
         male_bmr = round(88.362 + (13.397 * weight) + (4.799 * height ) - (5.677 * age),2)
         female_bmr = round(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age),2)
 
-        # determining which equation to use based on gender of the user
-        if gender == 'male' or 'Male':
-            print("Your basal metabolic rate is", male_bmr, "kcal.")
-        elif gender == 'female' or 'Female':
-            print("Your basal metabolic rate is", female_bmr, "kcal.")
-        else:
-            print("gender must be male or female...")
-
         # asking the user a few more questions to determine how many calories to add to their bmr
         job = db.session.query(User).get(current_user.job_type)
         job_type = request.form.get('jobType-content')
         # adding the job type to the database
-        print(job_type)
         job = job_type
         current_user.job_type = job
         db.session.commit()

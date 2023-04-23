@@ -14,7 +14,7 @@ from sqlalchemy.sql import func
 # Relationships with the User and other class objects are defined as one-to-many relationship with (the User can have many workouts, User can have many ..., etc)
 
 class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True) 
     email = db.Column(db.String(200), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
     first_name = db.Column(db.String(200), nullable=False)
@@ -35,15 +35,14 @@ class User(db.Model, UserMixin):
 class Client(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user = db.relationship('User', backref='client_user')
 
 class Coach(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    client_id = db.Column(db.Integer, db.ForeignKey('client.id'))
-    client = db.relationship('Client', backref='client_coach')
     # establishing the relationship between the user and coach tables
     # this allows us to access the user attributes from the coach table
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref='user', foreign_keys=[user_id])
+    user = db.relationship('User', backref='user')
     
 class Weight(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

@@ -72,11 +72,11 @@ def sign_up():
             db.session.commit()
             login_user(new_user, remember=True)
             if user_type.lower() == 'coach':
-                new_coach = Coach()
+                new_coach = Coach(user_id=current_user.id)
                 db.session.add(new_coach)
                 db.session.commit()
             if user_type.lower() == 'client':
-                new_client = Client()
+                new_client = Client(user_id=current_user.id)
                 db.session.add(new_client)
                 db.session.commit()
             flash('Account created!', category='success')
