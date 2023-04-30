@@ -5,8 +5,10 @@ from datetime import datetime
 from flask_login import UserMixin, login_manager, login_user, login_required, logout_user, current_user, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User, Coach, Client, Weight
-from sqlalchemy import delete, update, text
+from .models import User, Coach, Client, Weight, Upper_One, Upper_Two, Upper_Three, Lower_One, Lower_Two, Lower_Three
+from .models import Full_Body_One, Full_Body_Two, Full_Body_Three, Full_Body_One_4day, Full_Body_Two_4day, Full_Body_Three_4day, Full_Body_Four_4day
+from .models import UL_PPL_One, UL_PPL_Two, UL_PPL_Three, UL_PPL_Four, UL_PPL_Five, Upper_2day, Lower_2day
+from sqlalchemy.sql.expression import delete, update, text
 from datetime import date, timedelta
 from sqlalchemy.sql import func
 
@@ -24,7 +26,6 @@ def everyday_of_current_year(year):
 table = []
 for d in everyday_of_current_year(2023):
     table.append(d.strftime("%m-%d"))
-#print(table)
 
 # removing the zeros and empty strings from the list of weights that is pulled from the weight table 
 def removing_zeroes(x):
@@ -69,46 +70,45 @@ def home():
     removing_same_days(x=formatted_labels)
 
     labels = formatted_labels
-    #weights = Weight.query(Weight.new_weight).all()
     # updating the Weight table if the date created is the same
     now = datetime.now()
     today = now.date()
     today = str(today)
-    #sql = text("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='upper_2day'")
-    weight_date = text("SELECT count(date_created) FROM WEIGHT WHERE date_created='2023-01-07'")
-    result = db.session.execute(weight_date).fetchall()
-    #print(result)
     date_created = Weight.query.with_entities(Weight.date_created).all()
     created_dates = [row[0] for row in date_created]
     formatted_date_created = []
     for date in created_dates:
         dates = date.strftime("%Y-%m-%d")
         formatted_date_created.append(dates)
-    #print(dates)
-    print(formatted_date_created)
-    if len(formatted_date_created) >= 2:
-        if formatted_date_created[len(formatted_date_created)-1] == formatted_date_created[len(formatted_date_created)-2]:
-            # if the user already has a weight entered for the current day,
-            # that weight is deleted and replaced with the newly entered weight
-            update_weight = delete(Weight).where(Weight.date_created == today)
-            db.session.execute(update_weight)
-            db.session.commit()
+
+    
     coach = Coach.query.first()
-    print(coach.user.first_name)
+    #print(coach.user.first_name)
     client = Client.query.first()
-    print(client.user.first_name)
+    #print(client.user.first_name)
+    #weight = Weight.query.all()
+    #print(weight)
     
 
     if request.method == 'POST':
         weights = Weight.query.filter(Weight.new_weight)
-        new_weight = request.form.get("newWeight-content")
-        if new_weight == '':
+        daily_weight = request.form.get("newWeight-content")
+        print(daily_weight)
+        if daily_weight == '':
             flash('Weight cannot be empty!', category='error')
          
         else:
-            new_weight = Weight(user_id=current_user.id, new_weight=new_weight)
-            db.session.add(new_weight)
-            db.session.commit()
+            new_weight = Weight(user_id=current_user.id, new_weight=daily_weight)
+            if len(formatted_date_created) >= 1:
+                if formatted_date_created[len(formatted_date_created)-1] == formatted_date_created[len(formatted_date_created)-2]:
+                    # if the user already has a weight entered for the current day,
+                    # that weight is replaced with the newly entered weight
+                    update_weight = update(Weight).where(Weight.date_created == today).values(new_weight = daily_weight)
+                    db.session.execute(update_weight)
+                    db.session.commit()
+            else:
+                db.session.add(new_weight)
+                db.session.commit()
         # deleting the weights that are less than 10 kg (not realistic to be under 10 kg)
         # deleting the weights that are empty ''
         delete_weight = delete(Weight).where(Weight.new_weight < 10)
@@ -309,11 +309,11 @@ def workout_automation():
 
                     # if there is already a row with id = 1, then the row is deleted and new columns are added
                     # otherwise the row is created 
-                    upper_table_results = db.session.query(Upper_One).filter(Upper_One.id)
+                    upper_table_results = db.session.query(Upper_One).filter(Upper_One.user_id)
 
-                    if upper_table_results != 1:
+                    if upper_table_results != current_user.id:
 
-                        delete_row = delete(Upper_One).where(Upper_One.id==1)
+                        delete_row = delete(Upper_One).where(Upper_One.user_id==current_user.id)
                         db.session.execute(delete_row)
                         exercise1 = upper_one[0]
                         exercise2 = upper_one[1]
@@ -348,11 +348,11 @@ def workout_automation():
                     lower_one.append(random.choice(low3))
                     lower_one.append(random.choice(shoulder1))
 
-                    lower_table_results = db.session.query(Lower_One).filter(Lower_One.id)
+                    lower_table_results = db.session.query(Lower_One).filter(Lower_One.user_id)
 
-                    if lower_table_results != 1:
+                    if lower_table_results != current_user.id:
 
-                        delete_row = delete(Lower_One).where(Lower_One.id==1)
+                        delete_row = delete(Lower_One).where(Lower_One.user_id==current_user.id)
                         db.session.execute(delete_row)
                         exercise1 = lower_one[0]
                         exercise2 = lower_one[1]
@@ -389,11 +389,11 @@ def workout_automation():
                                 upper_two.remove(elem)
                                 return upper_day_two()
 
-                        upper_table_results = db.session.query(Upper_Two).filter(Upper_Two.id)
+                        upper_table_results = db.session.query(Upper_Two).filter(Upper_Two.user_id)
 
-                        if upper_table_results != 1:
+                        if upper_table_results != current_user.id:
 
-                            delete_row = delete(Upper_Two).where(Upper_Two.id==1)
+                            delete_row = delete(Upper_Two).where(Upper_Two.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = upper_two[0]
                             exercise2 = upper_two[1]
@@ -436,17 +436,17 @@ def workout_automation():
                                 lower_two.remove(elem)
                                 return lower_day_two()
 
-                        lower_table_results = db.session.query(Lower_Two).filter(Lower_Two.id)
+                        lower_table_results = db.session.query(Lower_Two).filter(Lower_Two.user_id)
 
-                        if lower_table_results != 1:
+                        if lower_table_results != current_user.id:
 
-                            delete_row = delete(Lower_Two).where(Lower_Two.id==1)
+                            delete_row = delete(Lower_Two).where(Lower_Two.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = lower_two[0]
                             exercise2 = lower_two[1]
                             exercise3 = lower_two[2]
                             exercise4 = lower_two[3]
-                            exercises = Lower_Two(user_id=current_user.id, exercise1=exercise1, exercise2=exercise2, exercise3=exercise3, exercise4=exercise4)
+                            exercises = Lower_Two(user_id=current_user.id,exercise1=exercise1, exercise2=exercise2, exercise3=exercise3, exercise4=exercise4)
                             db.session.add(exercises)
                             db.session.commit()
 
@@ -476,11 +476,11 @@ def workout_automation():
                                 upper_three.remove(elem)
                                 return upper_day_three()
 
-                        upper_table_results = db.session.query(Upper_Three).filter(Upper_Three.id)
+                        upper_table_results = db.session.query(Upper_Three).filter(Upper_Three.user_id)
 
-                        if upper_table_results != 1:
+                        if upper_table_results != current_user.id:
 
-                            delete_row = delete(Upper_Three).where(Upper_Three.id==1)
+                            delete_row = delete(Upper_Three).where(Upper_Three.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = upper_three[0]
                             exercise2 = upper_three[1]
@@ -523,11 +523,11 @@ def workout_automation():
                                 lower_three.remove(elem)
                                 return lower_day_three()
 
-                        lower_table_results = db.session.query(Lower_Three).filter(Lower_Three.id)
+                        lower_table_results = db.session.query(Lower_Three).filter(Lower_Three.user_id)
 
-                        if lower_table_results != 1:
+                        if lower_table_results != current_user.id:
 
-                            delete_row = delete(Lower_Three).where(Lower_Three.id==1)
+                            delete_row = delete(Lower_Three).where(Lower_Three.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = lower_three[0]
                             exercise2 = lower_three[1]
@@ -583,11 +583,11 @@ def workout_automation():
                         ul_ppl_one.append(random.choice(bi_exercises))
                         ul_ppl_one.append(random.choice(shoulder_exercises))
                      
-                        ul_ppl_one_table_res = db.session.query(UL_PPL_One).filter(UL_PPL_One.id)
+                        ul_ppl_one_table_res = db.session.query(UL_PPL_One).filter(UL_PPL_One.user_id)
 
-                        if ul_ppl_one_table_res != 1:
+                        if ul_ppl_one_table_res != current_user.id:
 
-                            delete_row = delete(UL_PPL_One).where(UL_PPL_One.id==1)
+                            delete_row = delete(UL_PPL_One).where(UL_PPL_One.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = ul_ppl_one[0]
                             exercise2 = ul_ppl_one[1]
@@ -628,11 +628,11 @@ def workout_automation():
 
 
 
-                        ul_ppl_two_table_res = db.session.query(UL_PPL_Two).filter(UL_PPL_Two.id)
+                        ul_ppl_two_table_res = db.session.query(UL_PPL_Two).filter(UL_PPL_Two.user_id)
 
-                        if ul_ppl_two_table_res != 1:
+                        if ul_ppl_two_table_res != current_user.id:
 
-                            delete_row = delete(UL_PPL_Two).where(UL_PPL_Two.id==1)
+                            delete_row = delete(UL_PPL_Two).where(UL_PPL_Two.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = ul_ppl_two[0]
                             exercise2 = ul_ppl_two[1]
@@ -681,11 +681,11 @@ def workout_automation():
                                 ul_ppl_three.remove(elem)
                                 return UL_PPL_day_three()
 
-                        ul_ppl_three_table_res = db.session.query(UL_PPL_Three).filter(UL_PPL_Three.id)
+                        ul_ppl_three_table_res = db.session.query(UL_PPL_Three).filter(UL_PPL_Three.user_id)
 
-                        if ul_ppl_three_table_res != 1:
+                        if ul_ppl_three_table_res != current_user.id:
 
-                            delete_row = delete(UL_PPL_Three).where(UL_PPL_Three.id==1)
+                            delete_row = delete(UL_PPL_Three).where(UL_PPL_Three.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = ul_ppl_three[0]
                             exercise2 = ul_ppl_three[1]
@@ -738,11 +738,11 @@ def workout_automation():
                                     ul_ppl_four.remove(elem)
                                     return UL_PPL_day_four()
 
-                        ul_ppl_four_table_res = db.session.query(UL_PPL_Four).filter(UL_PPL_Four.id)
+                        ul_ppl_four_table_res = db.session.query(UL_PPL_Four).filter(UL_PPL_Four.user_id)
 
-                        if ul_ppl_four_table_res != 1:
+                        if ul_ppl_four_table_res != current_user.id:
 
-                            delete_row = delete(UL_PPL_Four).where(UL_PPL_Four.id==1)
+                            delete_row = delete(UL_PPL_Four).where(UL_PPL_Four.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = ul_ppl_four[0]
                             exercise2 = ul_ppl_four[1]
@@ -794,11 +794,11 @@ def workout_automation():
                                 ul_ppl_five.remove(elem)
                                 return UL_PPL_day_five()
 
-                        ul_ppl_five_table_res = db.session.query(UL_PPL_Five).filter(UL_PPL_Five.id)
+                        ul_ppl_five_table_res = db.session.query(UL_PPL_Five).filter(UL_PPL_Five.user_id)
 
-                        if ul_ppl_five_table_res != 1:
+                        if ul_ppl_five_table_res != current_user.id:
 
-                            delete_row = delete(UL_PPL_Five).where(UL_PPL_Five.id==1)
+                            delete_row = delete(UL_PPL_Five).where(UL_PPL_Five.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = ul_ppl_five[0]
                             exercise2 = ul_ppl_five[1]
@@ -848,11 +848,11 @@ def workout_automation():
                         full_body_one.append(random.choice(calf_exercises))
                         full_body_one.append(random.choice(shoulder_exercises))
 
-                        full_body_one_table_res = db.session.query(Full_Body_One_4day).filter(Full_Body_One_4day.id)
+                        full_body_one_table_res = db.session.query(Full_Body_One_4day).filter(Full_Body_One_4day.user_id)
 
-                        if full_body_one_table_res != 1:
+                        if full_body_one_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_One_4day).where(Full_Body_One_4day.id==1)
+                            delete_row = delete(Full_Body_One_4day).where(Full_Body_One_4day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_one[0]
                             exercise2 = full_body_one[1]
@@ -899,11 +899,11 @@ def workout_automation():
                                 full_body_two.remove(elem)
                                 return full_body_day_two()
 
-                        full_body_two_table_res = db.session.query(Full_Body_Two_4day).filter(Full_Body_Two_4day.id)
+                        full_body_two_table_res = db.session.query(Full_Body_Two_4day).filter(Full_Body_Two_4day.user_id)
 
-                        if full_body_two_table_res != 1:
+                        if full_body_two_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_Two_4day).where(Full_Body_Two_4day.id==1)
+                            delete_row = delete(Full_Body_Two_4day).where(Full_Body_Two_4day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_two[0]
                             exercise2 = full_body_two[1]
@@ -946,11 +946,11 @@ def workout_automation():
                                 full_body_three.remove(elem)
                                 return full_body_day_three()
 
-                        full_body_three_table_res = db.session.query(Full_Body_Three_4day).filter(Full_Body_Three_4day.id)
+                        full_body_three_table_res = db.session.query(Full_Body_Three_4day).filter(Full_Body_Three_4day.user_id)
 
-                        if full_body_three_table_res != 1:
+                        if full_body_three_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_Three_4day).where(Full_Body_Three_4day.id==1)
+                            delete_row = delete(Full_Body_Three_4day).where(Full_Body_Three_4day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_three[0]
                             exercise2 = full_body_three[1]
@@ -996,11 +996,11 @@ def workout_automation():
                                 full_body_four.remove(elem)
                                 return full_body_day_four()
 
-                        full_body_four_table_res = db.session.query(Full_Body_Four_4day).filter(Full_Body_Four_4day.id)
+                        full_body_four_table_res = db.session.query(Full_Body_Four_4day).filter(Full_Body_Four_4day.user_id)
 
-                        if full_body_four_table_res != 1:
+                        if full_body_four_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_Four_4day).where(Full_Body_Four_4day.id==1)
+                            delete_row = delete(Full_Body_Four_4day).where(Full_Body_Four_4day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_four[0]
                             exercise2 = full_body_four[1]
@@ -1055,11 +1055,11 @@ def workout_automation():
                         full_body_one.append(random.choice(calf_exercises))
                         full_body_one.append(random.choice(shoulder_exercises))
 
-                        full_body_one_table_res = db.session.query(Full_Body_One).filter(Full_Body_One.id)
+                        full_body_one_table_res = db.session.query(Full_Body_One).filter(Full_Body_One.user_id)
 
-                        if full_body_one_table_res != 1:
+                        if full_body_one_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_One).where(Full_Body_One.id==1)
+                            delete_row = delete(Full_Body_One).where(Full_Body_One.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_one[0]
                             exercise2 = full_body_one[1]
@@ -1108,11 +1108,11 @@ def workout_automation():
                                 full_body_two.remove(elem)
                                 return full_body_day_two()
 
-                        full_body_two_table_res = db.session.query(Full_Body_Two).filter(Full_Body_Two.id)
+                        full_body_two_table_res = db.session.query(Full_Body_Two).filter(Full_Body_Two.user_id)
 
-                        if full_body_two_table_res != 1:
+                        if full_body_two_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_Two).where(Full_Body_Two.id==1)
+                            delete_row = delete(Full_Body_Two).where(Full_Body_Two.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_two[0]
                             exercise2 = full_body_two[1]
@@ -1160,11 +1160,11 @@ def workout_automation():
                                 full_body_three.remove(elem)
                                 return full_body_day_three()
 
-                        full_body_three_table_res = db.session.query(Full_Body_Three).filter(Full_Body_Three.id)
+                        full_body_three_table_res = db.session.query(Full_Body_Three).filter(Full_Body_Three.user_id)
 
-                        if full_body_three_table_res != 1:
+                        if full_body_three_table_res != current_user.id:
 
-                            delete_row = delete(Full_Body_Three).where(Full_Body_Three.id==1)
+                            delete_row = delete(Full_Body_Three).where(Full_Body_Three.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = full_body_three[0]
                             exercise2 = full_body_three[1]
@@ -1219,11 +1219,11 @@ def workout_automation():
                         upper.append(random.choice(chest_iso_exercises))
                         upper.append(random.choice(back_iso_exercises))
 
-                        upper_table_res = db.session.query(Upper_2day).filter(Upper_2day.id)
+                        upper_table_res = db.session.query(Upper_2day).filter(Upper_2day.user_id)
 
-                        if upper_table_res != 1:
+                        if upper_table_res != current_user.id:
 
-                            delete_row = delete(Upper_2day).where(Upper_2day.id==1)
+                            delete_row = delete(Upper_2day).where(Upper_2day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = upper[0]
                             exercise2 = upper[1]
@@ -1266,11 +1266,11 @@ def workout_automation():
                         lower.append(random.choice(shoulder_exercises))
                     
 
-                        lower_table_res = db.session.query(Lower_2day).filter(Lower_2day.id)
+                        lower_table_res = db.session.query(Lower_2day).filter(Lower_2day.user_id)
 
-                        if lower_table_res != 1:
+                        if lower_table_res != current_user.id:
 
-                            delete_row = delete(Lower_2day).where(Lower_2day.id==1)
+                            delete_row = delete(Lower_2day).where(Lower_2day.user_id==current_user.id)
                             db.session.execute(delete_row)
                             exercise1 = lower[0]
                             exercise2 = lower[1]
@@ -1312,34 +1312,35 @@ def workout_automation():
 def workout_automation_result():
     if request.method == 'GET':
         # getting the Upper/Lower 6 Day exercises from the table database
-        upper_1 = db.session.query(Upper_One).get(1)
-        lower_1 = db.session.query(Lower_One).get(1)
-        upper_2 = db.session.query(Upper_Two).get(1)
-        lower_2 = db.session.query(Lower_Two).get(1)
-        upper_3 = db.session.query(Upper_Three).get(1)
-        lower_3 = db.session.query(Lower_Three).get(1)
+        upper_1 = db.session.query(Upper_One).get({"user_id":current_user.id})
+        lower_1 = db.session.query(Lower_One).get({"user_id":current_user.id})
+        upper_2 = db.session.query(Upper_Two).get({"user_id":current_user.id})
+        lower_2 = db.session.query(Lower_Two).get({"user_id":current_user.id})
+        upper_3 = db.session.query(Upper_Three).get({"user_id":current_user.id})
+        lower_3 = db.session.query(Lower_Three).get({"user_id":current_user.id})
         
         # getting the full body 3 Day exercises from the table in the database 
-        full_body_1 = db.session.query(Full_Body_One).get(1)
-        full_body_2 = db.session.query(Full_Body_Two).get(1)
-        full_body_3 = db.session.query(Full_Body_Three).get(1)
+        full_body_1 = db.session.query(Full_Body_One).get({"user_id":current_user.id})
+        full_body_2 = db.session.query(Full_Body_Two).get({"user_id":current_user.id})
+        full_body_3 = db.session.query(Full_Body_Three).get({"user_id":current_user.id})
 
         # getting the full body 4 Day exercises from the table in the database
-        full_body4_1 = db.session.query(Full_Body_One_4day).get(1)
-        full_body4_2 = db.session.query(Full_Body_Two_4day).get(1)
-        full_body4_3 = db.session.query(Full_Body_Three_4day).get(1)
-        full_body4_4 = db.session.query(Full_Body_Four_4day).get(1)
+        full_body4_1 = db.session.query(Full_Body_One_4day).get({"user_id":current_user.id})
+        full_body4_2 = db.session.query(Full_Body_Two_4day).get({"user_id":current_user.id})
+        full_body4_3 = db.session.query(Full_Body_Three_4day).get({"user_id":current_user.id})
+        full_body4_4 = db.session.query(Full_Body_Four_4day).get({"user_id":current_user.id})
 
         # getting the uppper/lower-full body 5 day exercises from the table in the database
-        ul_ppl_1 = db.session.query(UL_PPL_One).get(1)
-        ul_ppl_2 = db.session.query(UL_PPL_Two).get(1)
-        ul_ppl_3 = db.session.query(UL_PPL_Three).get(1)
-        ul_ppl_4 = db.session.query(UL_PPL_Four).get(1)
-        ul_ppl_5 = db.session.query(UL_PPL_Five).get(1)
+        ul_ppl_1 = db.session.query(UL_PPL_One).get({"user_id":current_user.id})
+        ul_ppl_2 = db.session.query(UL_PPL_Two).get({"user_id":current_user.id})
+        ul_ppl_3 = db.session.query(UL_PPL_Three).get({"user_id":current_user.id})
+        ul_ppl_4 = db.session.query(UL_PPL_Four).get({"user_id":current_user.id})
+        ul_ppl_5 = db.session.query(UL_PPL_Five).get({"user_id":current_user.id})
 
         # getting the full body 2 day exercises from the table in the database
-        ul_upper = db.session.query(Upper_2day).get(1)
-        ul_lower = db.session.query(Lower_2day).get(1)
+        ul_upper = db.session.query(Upper_2day).get({"user_id":current_user.id})
+        ul_lower = db.session.query(Lower_2day).get({"user_id":current_user.id})
+        
         # add each exercise that is committed to each model class
         # this will allow for accessing each exercise from each possible workkout split defined in the workout automation method  
         return render_template("workout_automation_result.html", user=current_user, upper_one=upper_1, lower_one=lower_1,
@@ -1359,49 +1360,49 @@ def workouts():
 
         # getting the columns in the table for the workout and storing the result in a variable that can be rendered via jinja2 templating. 
         # only have to check the columns from one table in this workout because if one is empty then so are the rest.
-        exercises = text("SELECT exercise1, exercise2, exercise3, exercise4, exercise5 FROM Upper__One ")
+        exercises = text("SELECT * FROM Upper__One ")
         upper_one_result = db.session.execute(exercises).fetchall()
         
-        upper_1 = db.session.query(Upper_One).get(1)
-        lower_1 = db.session.query(Lower_One).get(1)
-        upper_2 = db.session.query(Upper_Two).get(1)
-        lower_2 = db.session.query(Lower_Two).get(1)
-        upper_3 = db.session.query(Upper_Three).get(1)
-        lower_3 = db.session.query(Lower_Three).get(1)
+        upper_1 = db.session.query(Upper_One).get({"user_id":current_user.id})
+        lower_1 = db.session.query(Lower_One).get({"user_id":current_user.id})
+        upper_2 = db.session.query(Upper_Two).get({"user_id":current_user.id})
+        lower_2 = db.session.query(Lower_Two).get({"user_id":current_user.id})
+        upper_3 = db.session.query(Upper_Three).get({"user_id":current_user.id})
+        lower_3 = db.session.query(Lower_Three).get({"user_id":current_user.id})
         
         # getting the full body 3 Day exercises from the table in the database 
-        full_body_3_exercises = text("SELECT exercise1, exercise2, exercise3, exercise4, exercise5 FROM Full__Body__One ")
+        full_body_3_exercises = text("SELECT * FROM Full__Body__One ")
         full_body_3_result = db.session.execute(full_body_3_exercises).fetchall()
 
-        full_body_1 = db.session.query(Full_Body_One).get(1)
-        full_body_2 = db.session.query(Full_Body_Two).get(1)
-        full_body_3 = db.session.query(Full_Body_Three).get(1)
+        full_body_1 = db.session.query(Full_Body_One).get({"user_id":current_user.id})
+        full_body_2 = db.session.query(Full_Body_Two).get({"user_id":current_user.id})
+        full_body_3 = db.session.query(Full_Body_Three).get({"user_id":current_user.id})
 
         # getting the full body 4 Day exercises from the table in the database
-        full_body_4_exercises = text("SELECT exercise1, exercise2, exercise3, exercise4, exercise5 FROM Full__Body__One_4day ")
+        full_body_4_exercises = text("SELECT * FROM Full__Body__One_4day ")
         full_body_4_result = db.session.execute(full_body_4_exercises).fetchall()
 
-        full_body4_1 = db.session.query(Full_Body_One_4day).get(1)
-        full_body4_2 = db.session.query(Full_Body_Two_4day).get(1)
-        full_body4_3 = db.session.query(Full_Body_Three_4day).get(1)
-        full_body4_4 = db.session.query(Full_Body_Four_4day).get(1)
+        full_body4_1 = db.session.query(Full_Body_One_4day).get({"user_id":current_user.id})
+        full_body4_2 = db.session.query(Full_Body_Two_4day).get({"user_id":current_user.id})
+        full_body4_3 = db.session.query(Full_Body_Three_4day).get({"user_id":current_user.id})
+        full_body4_4 = db.session.query(Full_Body_Four_4day).get({"user_id":current_user.id})
 
         # getting the uppper/lower-full body 5 day exercises from the table in the database
-        ul_ppl_5_exercises = text("SELECT exercise1, exercise2, exercise3, exercise4, exercise5 FROM UL_PPL__One ")
+        ul_ppl_5_exercises = text("SELECT * FROM UL_PPL__One ")
         ul_ppl_5_result = db.session.execute(ul_ppl_5_exercises).fetchall()
 
-        ul_ppl_1 = db.session.query(UL_PPL_One).get(1)
-        ul_ppl_2 = db.session.query(UL_PPL_Two).get(1)
-        ul_ppl_3 = db.session.query(UL_PPL_Three).get(1)
-        ul_ppl_4 = db.session.query(UL_PPL_Four).get(1)
-        ul_ppl_5 = db.session.query(UL_PPL_Five).get(1)
+        ul_ppl_1 = db.session.query(UL_PPL_One).get({"user_id":current_user.id})
+        ul_ppl_2 = db.session.query(UL_PPL_Two).get({"user_id":current_user.id})
+        ul_ppl_3 = db.session.query(UL_PPL_Three).get({"user_id":current_user.id})
+        ul_ppl_4 = db.session.query(UL_PPL_Four).get({"user_id":current_user.id})
+        ul_ppl_5 = db.session.query(UL_PPL_Five).get({"user_id":current_user.id})
 
         # getting the full body 2 day exercises from the table in the database
-        ul_exercises = text("SELECT exercise1, exercise2, exercise3, exercise4, exercise5 FROM Upper_2day ")
+        ul_exercises = text("SELECT * FROM Upper_2day ")
         ul_result = db.session.execute(ul_exercises).fetchall()
 
-        ul_upper = db.session.query(Upper_2day).get(1)
-        ul_lower = db.session.query(Lower_2day).get(1)
+        ul_upper = db.session.query(Upper_2day).get({"user_id":current_user.id})
+        ul_lower = db.session.query(Lower_2day).get({"user_id":current_user.id})
 
         return render_template('workouts.html', user=current_user, upper_one=upper_1, lower_one=lower_1,
                                 upper_two=upper_2, lower_two=lower_2, upper_three=upper_3, lower_three=lower_3, full_body_one=full_body_1,

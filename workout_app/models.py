@@ -34,6 +34,8 @@ class User(db.Model, UserMixin):
 
 class Client(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    # establishing the relationship between the user and client tables
+    # this allows us to access the user attributes from the client table
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='client_user')
 
@@ -47,6 +49,234 @@ class Coach(db.Model, UserMixin):
 class Weight(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    new_weight = db.Column(db.Float,)
+    new_weight = db.Column(db.Integer,)
     date_created = db.Column(db.Date, default=datetime.now())
-        
+
+# six day workout split (ULULUL)
+class Upper_One(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_upper_1')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Lower_One(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_lower_1')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Upper_Two(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_upper_2')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Lower_Two(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_lower_2')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Upper_Three(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_upper_3')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Lower_Three(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_lower_3')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+# five day workout split (ULPPL)
+class UL_PPL_One(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_ul_ppl_1')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class UL_PPL_Two(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_ul_ppl_2')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class UL_PPL_Three(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_ul_ppl_3')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class UL_PPL_Four(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_ul_ppl_4')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class UL_PPL_Five(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_ul_ppl_5')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+# four day workout split (full body 1 2 3 4)
+class Full_Body_One_4day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_1_4')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    exercise8 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Full_Body_Two_4day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_2_4')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Full_Body_Three_4day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_3_4')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Full_Body_Four_4day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_4_4')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+# three day workout split (full body 1 2 3)
+class Full_Body_One(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_1')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    exercise8 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Full_Body_Two(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_2')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    exercise8 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Full_Body_Three(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_full_body_3')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    exercise8 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+# two day workout split (UL)
+class Upper_2day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_upper_2day')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    exercise7 = db.Column(db.String(200), nullable=True)
+    exercise8 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+
+class Lower_2day(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True, nullable=False)
+    user = db.relationship('User', backref='user_lower_2day')
+    exercise1 = db.Column(db.String(200), nullable=True)
+    exercise2 = db.Column(db.String(200), nullable=True)
+    exercise3 = db.Column(db.String(200), nullable=True)
+    exercise4 = db.Column(db.String(200), nullable=True)
+    exercise5 = db.Column(db.String(200), nullable=True)
+    exercise6 = db.Column(db.String(200), nullable=True)
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
