@@ -39,6 +39,13 @@ class Client(db.Model, UserMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref='client_user')
 
+class Coach_Client(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    client_id = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    client = db.relationship('Client', backref='client_coach')
+    coach_id = db.Column(db.Integer, db.ForeignKey('coach.id'), nullable=False)
+    coach = db.relationship('Coach', backref='coach_client')
+
 class Coach(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     # establishing the relationship between the user and coach tables

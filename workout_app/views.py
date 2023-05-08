@@ -5,7 +5,7 @@ from datetime import datetime
 from flask_login import UserMixin, login_manager, login_user, login_required, logout_user, current_user, LoginManager
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
-from .models import User, Coach, Client, Weight, Upper_One, Upper_Two, Upper_Three, Lower_One, Lower_Two, Lower_Three
+from .models import User, Coach, Client, Weight, Upper_One, Upper_Two, Upper_Three, Lower_One, Lower_Two, Lower_Three, Coach_Client
 from .models import Full_Body_One, Full_Body_Two, Full_Body_Three, Full_Body_One_4day, Full_Body_Two_4day, Full_Body_Three_4day, Full_Body_Four_4day
 from .models import UL_PPL_One, UL_PPL_Two, UL_PPL_Three, UL_PPL_Four, UL_PPL_Five, Upper_2day, Lower_2day
 from sqlalchemy.sql.expression import delete, update, text
@@ -81,10 +81,9 @@ def home():
         dates = date.strftime("%Y-%m-%d")
         formatted_date_created.append(dates)
 
-    
-    coach = Coach.query.first()
+    #coach = Coach.query.first()
     #print(coach.user.first_name)
-    client = Client.query.first()
+    #client = Client.query.first()
     #print(client.user.first_name)
     #weight = Weight.query.all()
     #print(weight)
@@ -136,6 +135,21 @@ def profile_page(first_name):
         first_name = db.session.query(User).get(current_user.first_name)
         user_info = db.session.query(User).all()
         return render_template("profile.html", user=current_user, first_name=first_name, user_info=user_info) 
+
+# creating a method for the coaching page
+@views.route('/coaching', methods=['POST', 'GET'])
+@login_required
+def coaching():
+    # query to get coaches' info
+    query = text(f"SELECT first_name,last_name,email FROM user JOIN coach ON user.id==coach.user_id")
+    users = db.session.execute(query).fetchall()
+    if request.method == 'POST':
+        new_coach_client = Coach_Client(user)
+        flash('Congrats, you have selected a coach!', category='success')
+    else:
+        pass
+        #coaches = db.session.query(Coach).all()
+    return render_template("coaching.html", user=current_user, users=users)
 
 # accessing the calorie calculator page
 @views.route('/calorie-calculator', methods=['POST', 'GET'])
