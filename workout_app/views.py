@@ -141,15 +141,42 @@ def profile_page(first_name):
 @login_required
 def coaching():
     # query to get coaches' info
-    query = text(f"SELECT first_name,last_name,email FROM user JOIN coach ON user.id==coach.user_id")
-    users = db.session.execute(query).fetchall()
+    query = text(f"SELECT * FROM user JOIN coach ON user.id==coach.user_id")
+    coaches = db.session.execute(query).fetchall()
+    client_query = text(f"SELECT * FROM user JOIN client ON user.id==client.user_id")
+    clients = db.session.execute(client_query).fetchall()
+    
+    # query to check if client_id is already tied to another coach_id 
+    # also running a separate query to check if a coach's id appears more than 5 times
+    # this will be the constraint on a client adding that coach.
+    coach_client_query = text(f"SELECT coach_id FROM coach__client GROUP BY coach_id HAVING count(coach_id)>5")
+    coach_gt_five = db.session.execute(coach_client_query).fetchall()
+    coach_gt_five_res = [row[0] for row in coach_gt_five]
+    
+    # handling the post request 
     if request.method == 'POST':
-        new_coach_client = Coach_Client(user)
-        flash('Congrats, you have selected a coach!', category='success')
+        # retrieving the coach information
+        coach_id = request.form.get('coach-content')
+        for client in clients:
+            # checking if the current user id is in the list of client ids
+            if current_user.id == client.user_id:
+                client_id = client.id
+                # checking if the coach id is not in the list of coach ids that have more than 5 clients
+                if int(coach_id) not in coach_gt_five_res:
+                    # adding the coach and client ids to the coach_client table and commit to the database
+                    new_coach_client = Coach_Client(client_id=client_id, coach_id=coach_id)
+                    db.session.add(new_coach_client)
+                    db.session.commit()
+                    flash('Congrats, you have selected a coach!', category='success')
+                    return redirect(url_for('views.home'))
+                else:
+                    # flashing an error message if user tries to add coach with max number of clients
+                    flash('Sorry that coach already has the max number of clients!', category='error')
+                    return redirect(url_for('views.coaching'))
     else:
         pass
         #coaches = db.session.query(Coach).all()
-    return render_template("coaching.html", user=current_user, users=users)
+    return render_template("coaching.html", user=current_user, coaches=coaches, clients=clients)
 
 # accessing the calorie calculator page
 @views.route('/calorie-calculator', methods=['POST', 'GET'])

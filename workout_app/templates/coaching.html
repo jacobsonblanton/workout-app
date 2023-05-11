@@ -50,14 +50,19 @@
                 <tbody>
                     <tr>
                         <tr>
-                            <th>First Name</th><th>Last Name</th><th>Email</th><th></th>
+                            <th>First Name</th><th>Last Name</th><th>Email</th><th>Coach Id</th><th></th>
                         </tr>
                     </tr>
                     <tr>
-                        {% for coach in users %}
+                        {% for coach in coaches %}
                         <tr>
-                            <td>{{coach.first_name}}</td>><td>{{coach.last_name}}</td><td>{{coach.email}}</td>
-                            <td><button class="btn btn-outline-primary" type="submit" formmethod="post">Add as Coach</button></td>
+                            <td>{{coach.first_name}}</td>><td>{{coach.last_name}}</td><td>{{coach.email}}</td><td>{{coach.id}}</td>
+                            <td>
+                                <form method="POST">    
+                                    <input class="btn btn-outline-primary" type="hidden" value="{{coach.id}}" name="coach-content" id="coach-content">
+                                    <button class="btn btn-outline-primary" type="submit">Add as Coach</button>
+                                </form>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tr>
