@@ -188,8 +188,9 @@ def calorie_calculator():
         age = current_user.age
         gender = current_user.gender
         # getting bmr equation based on user input and printing the bmr
-        male_bmr = round(88.362 + (13.397 * weight) + (4.799 * height ) - (5.677 * age),2)
+        male_bmr = 88.362 + (13.397 * weight) + (4.799 * height ) - (5.677 * age)
         female_bmr = round(447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age),2)
+        male_bmr = round(male_bmr,2)
 
         # asking the user a few more questions to determine how many calories to add to their bmr
         job = db.session.query(User).get(current_user.job_type)
@@ -200,82 +201,165 @@ def calorie_calculator():
         db.session.commit()
         flash('Job type added!', category='success')
 
+        global diet_goal
+        diet_goal = request.form.get('DietGoal-content')
         cardio = request.form.get('cardio-content')
         weight_training = request.form.get('weightTraining-content')
 
         # implementing a while loop for male and female so I can add calories to correct bmr value
         while gender == 'male' or gender == 'Male':
-            if job_type == 'sedentary':
-                male_bmr += 300
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(male_bmr,2), "kcal.")
-                
-            elif job_type == 'sedentary-active':
-                male_bmr += 500
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(male_bmr,2), "kcal.")
+            if diet_goal == 'maintenance':
+                if job_type == 'sedentary':
+                    male_bmr += 300
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+                    
+                elif job_type == 'sedentary-active':
+                    male_bmr += 500
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
 
-            elif job_type == 'active-sedentary':
-                male_bmr += 700
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(male_bmr,2), "kcal.")
+                elif job_type == 'active-sedentary':
+                    male_bmr += 700
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
 
-            elif job_type == 'active':
-                male_bmr += 900
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(male_bmr,2), "kcal.")
+                elif job_type == 'active':
+                    male_bmr += 900
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
 
-            elif job_type == '' or cardio == '' or weight_training == '':
-                flash('No field can be left empty!', category='error')
-                return redirect(url_for('views.calorie_calculator'))
+                elif job_type == '' or cardio == '' or weight_training == '':
+                    flash('No field can be left empty!', category='error')
+                    return redirect(url_for('views.calorie_calculator'))
 
-            else:
-                print("Enter a valid selection.")
+                else:
+                    print("Enter a valid selection.")
+            elif diet_goal == 'bulking':
+                if job_type == 'sedentary':
+                    male_bmr += 550
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+                    
+                elif job_type == 'sedentary-active':
+                    male_bmr += 750
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == 'active-sedentary':
+                    male_bmr += 950
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == 'active':
+                    male_bmr += 1150
+                    print("...calculating your new bmr")
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == '' or cardio == '' or weight_training == '':
+                    flash('No field can be left empty!', category='error')
+                    return redirect(url_for('views.calorie_calculator'))
+
+                else:
+                    print("Enter a valid selection.")
+            elif diet_goal == 'cutting':
+                if job_type == 'sedentary':
+                    male_bmr += 50
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+                    
+                elif job_type == 'sedentary-active':
+                    male_bmr += 250
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == 'active-sedentary':
+                    male_bmr += 450
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == 'active':
+                    male_bmr += 650
+                    print("Your new bmr is", round(male_bmr,2), "kcal.")
+
+                elif job_type == '' or cardio == '' or weight_training == '':
+                    flash('No field can be left empty!', category='error')
+                    return redirect(url_for('views.calorie_calculator'))
+
+                else:
+                    print("Enter a valid selection.")
 
             # updating user calories into the database
             cals = db.session.query(User).get(current_user.cals)
-            cals = male_bmr
+            cals = round(male_bmr, 2)
             current_user.cals = cals
             db.session.commit()
-            print(cals)
-            print(round(cals*7.00,2))
+            #print(round(cals*7.00,2))
             flash('BMR added!', category='success')
             return redirect(url_for('views.calorie_calculator_result'))
 
 
         while gender == 'female' or gender == 'Female':
-            if job_type == 'sedentary':
-                female_bmr += 300
-                print("...calculating your new bmr")
+            if diet_goal == 'maintenance':
+                if job_type == 'sedentary':
+                    female_bmr += 300
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                elif job_type == 'sedentary-active':
+                    female_bmr += 500
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
                 
-                print("Your new bmr is", round(female_bmr,2), "kcal.")
-            elif job_type == 'sedentary-active':
-                female_bmr += 500
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(female_bmr,2), "kcal.")
-            
-            elif job_type == 'active-sedentary':
-                female_bmr += 700
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(female_bmr,2), "kcal.")
-            
-            elif job_type == 'active':
-                female_bmr += 900
-                print("...calculating your new bmr")
-                print("Your new bmr is", round(female_bmr,2), "kcal.")
+                elif job_type == 'active-sedentary':
+                    female_bmr += 700
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                
+                elif job_type == 'active':
+                    female_bmr += 900
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
 
-            else:
-                print("Enter a valid selection.")
+                else:
+                    print("Enter a valid selection.")
+            elif diet_goal == 'bulking':
+                if job_type == 'sedentary':
+                    female_bmr += 550
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                elif job_type == 'sedentary-active':
+                    female_bmr += 750
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                
+                elif job_type == 'active-sedentary':
+                    female_bmr += 950
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                
+                elif job_type == 'active':
+                    female_bmr += 1150
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+
+                else:
+                    print("Enter a valid selection.")
+            elif diet_goal == 'cutting':
+                if job_type == 'sedentary':
+                    female_bmr += 50
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                elif job_type == 'sedentary-active':
+                    female_bmr += 250
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                
+                elif job_type == 'active-sedentary':
+                    female_bmr += 450
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+                
+                elif job_type == 'active':
+                    female_bmr += 650
+                    print("Your new bmr is", round(female_bmr,2), "kcal.")
+
+                else:
+                    print("Enter a valid selection.")
             
             cals = db.session.query(User).get(current_user.cals)
             cals = female_bmr
             current_user.cals = cals
             db.session.commit()
-            print(cals)
             flash('BMR added!', category='success')
             return redirect(url_for('views.calorie_calculator_result'))
                             
-        return render_template("calorie_calculator_result.html", user=current_user)
+        return render_template("calorie_calculator_result.html", user=current_user, diet_goal=diet_goal)
 
     else:
 
@@ -287,13 +371,11 @@ def calorie_calculator():
 def calorie_calculator_result():
     if request.method == 'GET':
         if current_user.gender == 'male' or 'Male':
-
-            
-            return render_template("calorie_calculator_result.html", user=current_user, gender=current_user.gender, cals=current_user.cals)
+            print(diet_goal)
+            return render_template("calorie_calculator_result.html", user=current_user, gender=current_user.gender, cals=current_user.cals, diet_goal=diet_goal)
         elif current_user.gender == 'female' or 'Female':
+            return render_template("calorie_calculator_result.html", user=current_user, gender=current_user.gender, cals=current_user.cals, diet_goal=diet_goal) 
             
-            return render_template("calorie_calculator_result.html", user=current_user, gender=current_user.gender, cals=current_user.cals) 
-        
 
 # accessing the workout automation page
 import random 

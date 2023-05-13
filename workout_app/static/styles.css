@@ -14,3 +14,17 @@ div {
     text-align: center;
     border: 1px solid #ede7bb;
 }
+
+/* Styling the macronutrient tables */
+.column {
+    float: left;
+    width: 33.33%;
+}
+
+.row1:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Changing the color of the macronutrient tables */

@@ -43,101 +43,345 @@
                 <div class="container-fluid">
                     <table class="table table-striped table-hover">
                         <tbody>
-                            {% if user.job_type == 'sedentary' %}
-                            <tr>
-                                <td>Basal Metbolic Rate</td>
-                                <td>{{ user.cals - 300 }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sedentary</strong></td>
-                                <td><strong>{{ user.cals }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary-active</td>
-                                <td>{{ user.cals + 200 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Active-sedentary</td>
-                                <td>{{ user.cals + 400 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Active</td>
-                                <td>{{ user.cals + 600 }}</td>
-                            </tr>
-                            {% elif user.job_type == 'sedentary-active' %}
-                            <tr>
-                                <td>Basal Metbolic Rate</td>
-                                <td>{{ (user.cals - 500)|round(2) }}</td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary</td>
-                                <td>{{ (user.cals - 200)|round(2) }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Sedentary-active</strong></td>
-                                <td><strong>{{ user.cals }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Active-sedentary</td>
-                                <td>{{ user.cals + 200 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Active</td>
-                                <td>{{ user.cals + 400 }}</td>
-                            </tr>
-                            {% elif user.job_type == 'active-sedentary' %}
-                            <tr>
-                                <td>Basal Metbolic Rate</td>
-                                <td>{{ user.cals - 700 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary</td>
-                                <td>{{ user.cals - 400 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary-active</td>
-                                <td>{{ user.cals - 200 }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Active-sedentary</strong></td>
-                                <td><strong>{{ user.cals }}</strong></td>
-                            </tr>
-                            <tr>
-                                <td>Active</td>
-                                <td>{{ user.cals + 200 }}</td>
-                            </tr>
-                            {% elif user.job_type == 'active' %}
-                            <tr>
-                                <td>Basal Metbolic Rate</td>
-                                <td>{{ user.cals - 900 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary</td>
-                                <td>{{ user.cals - 600 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Sedentary-active</td>
-                                <td>{{ user.cals - 400 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Active-sedentary</td>
-                                <td>{{ user.cals - 200 }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Active</strong></td>
-                                <td><strong>{{ user.cals }}</strong></td>
-                            </tr>
+                            {% if diet_goal == 'maintenance' %}
+                                {% if user.job_type == 'sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 300)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 600 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'sedentary-active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 500)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ (user.cals - 200)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary-active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active-sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 700 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 400 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active-sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 900 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 600 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 400 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals - 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                {% endif %}
+                            {% elif diet_goal == 'bulking' %}
+                                {% if user.job_type == 'sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 550)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 600 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'sedentary-active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 750)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ (user.cals - 550)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary-active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active-sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 950 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 750 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 550 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active-sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 1150 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 950 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 750 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals - 550 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                {% endif %}
+                            {% elif diet_goal == 'cutting' %}
+                                {% if user.job_type == 'sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 50)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 600 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'sedentary-active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ (user.cals - 450)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ (user.cals - 250)|round(2) }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sedentary-active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 400 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active-sedentary' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 650 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 450 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 250 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active-sedentary</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Active</td>
+                                    <td>{{ user.cals + 200 }}</td>
+                                </tr>
+                                {% elif user.job_type == 'active' %}
+                                <tr>
+                                    <td>Basal Metbolic Rate</td>
+                                    <td>{{ user.cals - 850 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary</td>
+                                    <td>{{ user.cals - 650 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Sedentary-active</td>
+                                    <td>{{ user.cals - 450 }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Active-sedentary</td>
+                                    <td>{{ user.cals - 250 }}</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Active</strong></td>
+                                    <td><strong>{{ user.cals }}</strong></td>
+                                </tr>
+                                {% endif %}
                             {% endif %}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <div class="row1">
+            <!--
+            <h3>
+                Here is your Macronutrient breakdown of your maintenance calories:
+            </h3>
+            -->
+            <div class="column">
+                <h5>
+                    Moderate Carb, Moderate Fat
+                </h5>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Protein</td>
+                            <td>{{((user.cals*(0.25))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Carbs</td>
+                            <td>{{((user.cals*(0.50))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Fat</td>
+                            <td>{{((user.cals*(0.25))/9)|round(0)}}g</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <h5>
+                    High Carb, Low Fat
+                </h5>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Protein</td>
+                            <td>{{((user.cals*(0.25))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Carbs</td>
+                            <td>{{((user.cals*(0.55))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Fat</td>
+                            <td>{{((user.cals*(0.15))/9)|round(0)}}g</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="column">
+                <h5>
+                    Low Carb, High Fat
+                </h5>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Protein</td>
+                            <td>{{((user.cals*(0.30))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Carbs</td>
+                            <td>{{((user.cals*(0.20))/4)|round(0)}}g</td>
+                        </tr>
+                        <tr>
+                            <td>Fat</td>
+                            <td>{{((user.cals*(0.50))/9)|round(0)}}g</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <form method="GET" action="/calorie-calculator">
-            <br><br><br>
+            <br>
             <button class="btn btn-outline-primary" type="submit">Re-Calculate</button>
         </form>
-        <br/><br/><br/><br/><br/><br/>        
+        <br/><br/>  
         <!-- displaying the flashed messgaes related to logging in -->
         {% with messages = get_flashed_messages(with_categories=true) %} 
             {% if messages %} 
