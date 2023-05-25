@@ -81,14 +81,11 @@ def home():
         dates = date.strftime("%Y-%m-%d")
         formatted_date_created.append(dates)
 
-    #coach = Coach.query.first()
-    #print(coach.user.first_name)
-    #client = Client.query.first()
-    #print(client.user.first_name)
-    #weight = Weight.query.all()
-    #print(weight)
+    # query to check if the current user id is equal to a user id in the coach table or client table
+    query = text(f"SELECT user_id FROM coach JOIN user ON coach.user_id==user.id")
+    user_query = db.session.execute(query).fetchall()
+    user_query_res = [row[0] for row in user_query]
     
-
     if request.method == 'POST':
         weights = Weight.query.filter(Weight.new_weight)
         daily_weight = request.form.get("newWeight-content")
@@ -119,11 +116,11 @@ def home():
         db.session.commit()
         
         return render_template("home.html", user=current_user, first_name=current_user.first_name, weight=weights, 
-        values=values, labels=labels)
+        values=values, labels=labels, user_query_res=user_query_res)
 
     else:
         return render_template("home.html", user=current_user, first_name=current_user.first_name, 
-        values=values, labels=labels)
+        values=values, labels=labels, user_query_res=user_query_res)
 
 # accessing the user's profile page 
 @views.route('/profile/<first_name>', methods=['POST', 'GET'])
@@ -135,6 +132,36 @@ def profile_page(first_name):
         first_name = db.session.query(User).get(current_user.first_name)
         user_info = db.session.query(User).all()
         return render_template("profile.html", user=current_user, first_name=first_name, user_info=user_info) 
+
+# creating a method for the clients page
+@views.route('/clients', methods=['POST', 'GET'])
+@login_required
+def clients_page():
+    # query for joining and fetching all users information that are clients
+    client_query = text(f"SELECT * FROM user JOIN client ON user.id==client.user_id")
+    clients = db.session.execute(client_query).fetchall()
+    # query for joining and fetching coaches 
+    query = text(f"SELECT id FROM coach WHERE {current_user.id}==coach.user_id")
+    coach = db.session.execute(query).fetchall()
+    coach_id = [row[0] for row in coach]
+    # exracting the coach id from the list
+    for i in coach_id:
+        pass
+    # query for fetching thee coach__client table
+    coach_client_query = text(f"SELECT client_id, coach_id FROM coach__client WHERE coach_id=={i}")
+    coach_client_query_res = db.session.execute(coach_client_query).fetchall()
+    cc_relationship = [row[0] for row in coach_client_query_res]
+    
+    # getting the client id from the form
+    global client_id
+    client_id = request.form.get('client-content')
+
+
+    if request.method == 'POST':
+        # display the client's workouts
+        return redirect(url_for('views.client_workouts'))   
+    else:
+        return render_template("clients.html", user=current_user, clients=clients, cc_relationship=cc_relationship)
 
 # creating a method for the coaching page
 @views.route('/coaching', methods=['POST', 'GET'])
@@ -1476,10 +1503,12 @@ def workout_automation_result():
 @login_required
 def workouts():
     if request.method == 'GET':
-        # getting the Upper/Lower 6 Day exercises from the table database
-
-        # checking the table exists in the database
-        #sql = text("SELECT count(name) FROM sqlite_master WHERE type='table' AND name='upper_2day'")
+        # query for joining and fetching all users information that are clients
+        client_query = text(f"SELECT * FROM user JOIN client ON user.id==client.user_id")
+        clients = db.session.execute(client_query).fetchall()
+        for client in clients:
+            client_id = client.id
+        
 
         # getting the columns in the table for the workout and storing the result in a variable that can be rendered via jinja2 templating. 
         # only have to check the columns from one table in this workout because if one is empty then so are the rest.
@@ -1527,7 +1556,73 @@ def workouts():
         ul_upper = db.session.query(Upper_2day).get({"user_id":current_user.id})
         ul_lower = db.session.query(Lower_2day).get({"user_id":current_user.id})
 
-        return render_template('workouts.html', user=current_user, upper_one=upper_1, lower_one=lower_1,
+        return render_template('workouts.html', user=current_user, client=client, client_id=client_id, upper_one=upper_1, lower_one=lower_1,
+                                upper_two=upper_2, lower_two=lower_2, upper_three=upper_3, lower_three=lower_3, full_body_one=full_body_1,
+                                full_body_two=full_body_2, full_body_three=full_body_3, full_body4_one=full_body4_1, full_body4_two=full_body4_2,
+                                full_body4_three=full_body4_3, full_body4_four=full_body4_4, ul_ppl_one=ul_ppl_1,ul_ppl_two=ul_ppl_2, ul_ppl_three=ul_ppl_3,
+                                ul_ppl_four=ul_ppl_4, ul_ppl_five=ul_ppl_5, ul_upper=ul_upper, ul_lower=ul_lower, upper_one_result=upper_one_result,
+                                full_body_3_result=full_body_3_result, full_body_4_result=full_body_4_result, ul_ppl_5_result=ul_ppl_5_result,
+                                ul_result=ul_result) 
+    
+@views.route('/client-workouts', methods=['POST', 'GET'])
+def client_workouts():
+    if request.method == 'GET':
+        # query for joining and fetching all users information that are clients
+        client_query = text(f"SELECT * FROM user JOIN client ON user.id==client.user_id")
+        clients = db.session.execute(client_query).fetchall()
+        
+        for client in clients:
+            if client.id == int(client_id):
+        
+        
+
+                # getting the columns in the table for the workout and storing the result in a variable that can be rendered via jinja2 templating. 
+                # only have to check the columns from one table in this workout because if one is empty then so are the rest.
+                exercises = text("SELECT * FROM Upper__One ")
+                upper_one_result = db.session.execute(exercises).fetchall()
+                
+                upper_1 = db.session.query(Upper_One).get({"user_id":client.user_id})
+                lower_1 = db.session.query(Lower_One).get({"user_id":client.user_id})
+                upper_2 = db.session.query(Upper_Two).get({"user_id":client.user_id})
+                lower_2 = db.session.query(Lower_Two).get({"user_id":client.user_id})
+                upper_3 = db.session.query(Upper_Three).get({"user_id":client.user_id})
+                lower_3 = db.session.query(Lower_Three).get({"user_id":client.user_id})
+                
+                # getting the full body 3 Day exercises from the table in the database 
+                full_body_3_exercises = text("SELECT * FROM Full__Body__One ")
+                full_body_3_result = db.session.execute(full_body_3_exercises).fetchall()
+
+                full_body_1 = db.session.query(Full_Body_One).get({"user_id":client.user_id})
+                full_body_2 = db.session.query(Full_Body_Two).get({"user_id":client.user_id})
+                full_body_3 = db.session.query(Full_Body_Three).get({"user_id":client.user_id})
+
+                # getting the full body 4 Day exercises from the table in the database
+                full_body_4_exercises = text("SELECT * FROM Full__Body__One_4day ")
+                full_body_4_result = db.session.execute(full_body_4_exercises).fetchall()
+
+                full_body4_1 = db.session.query(Full_Body_One_4day).get({"user_id":client.user_id})
+                full_body4_2 = db.session.query(Full_Body_Two_4day).get({"user_id":client.user_id})
+                full_body4_3 = db.session.query(Full_Body_Three_4day).get({"user_id":client.user_id})
+                full_body4_4 = db.session.query(Full_Body_Four_4day).get({"user_id":client.user_id})
+
+                # getting the uppper/lower-full body 5 day exercises from the table in the database
+                ul_ppl_5_exercises = text("SELECT * FROM UL_PPL__One ")
+                ul_ppl_5_result = db.session.execute(ul_ppl_5_exercises).fetchall()
+
+                ul_ppl_1 = db.session.query(UL_PPL_One).get({"user_id":client.user_id})
+                ul_ppl_2 = db.session.query(UL_PPL_Two).get({"user_id":client.user_id})
+                ul_ppl_3 = db.session.query(UL_PPL_Three).get({"user_id":client.user_id})
+                ul_ppl_4 = db.session.query(UL_PPL_Four).get({"user_id":client.user_id})
+                ul_ppl_5 = db.session.query(UL_PPL_Five).get({"user_id":client.user_id})
+
+                # getting the full body 2 day exercises from the table in the database
+                ul_exercises = text("SELECT * FROM Upper_2day ")
+                ul_result = db.session.execute(ul_exercises).fetchall()
+
+                ul_upper = db.session.query(Upper_2day).get({"user_id":client.user_id})
+                ul_lower = db.session.query(Lower_2day).get({"user_id":client.user_id})
+
+        return render_template('client_workouts.html', user=current_user, client=client, client_id=client_id, upper_one=upper_1, lower_one=lower_1,
                                 upper_two=upper_2, lower_two=lower_2, upper_three=upper_3, lower_three=lower_3, full_body_one=full_body_1,
                                 full_body_two=full_body_2, full_body_three=full_body_3, full_body4_one=full_body4_1, full_body4_two=full_body4_2,
                                 full_body4_three=full_body4_3, full_body4_four=full_body4_4, ul_ppl_one=ul_ppl_1,ul_ppl_two=ul_ppl_2, ul_ppl_three=ul_ppl_3,

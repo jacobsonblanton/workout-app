@@ -22,9 +22,15 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                {% if current_user.id not in user_query_res %}
                 <li class="nav-item active">
                     <a class="nav-link" href="/coaching">Coaching<span class="sr-only"></span></a>
                 </li>
+                {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/clients">Clients<span class="sr-only"></span></a>
+                </li>
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{user.first_name}}'s Profile
@@ -35,7 +41,7 @@
                         <a class="dropdown-item" href="profile-setup">Setup</a>
                         <a class="dropdown-item" href="/workouts">Workouts</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/logout">Logout</a>
+                        <a class="dropdown-item" id="logout" href="/logout">Logout</a>
                     </div>
                 </li>
             </ul>
@@ -89,7 +95,6 @@
             <button class="btn btn-outline-primary" type="submit">Calculate</button>
             
         </form>{% endblock %}
-
         
         <div class="container-fluid message box">
             {% with messages = get_flashed_messages(with_categories=true) %} 

@@ -44,7 +44,7 @@
         </div>
     </nav>    
         <br/>
-        <div class="container-fluid">
+        <div class="container-fluid">{% block div %}
             <h1>Coaches</h1><br/>
             <table class="table table-striped table-hover">
                 <tbody>
@@ -68,7 +68,7 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </div> {% endblock %}
         <div class="container-fluid message box">
             {% with messages = get_flashed_messages(with_categories=true) %} 
                 {% if messages %} 
